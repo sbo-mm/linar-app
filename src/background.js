@@ -65,6 +65,10 @@ app.on('ready', async () => {
   createWindow()
 })
 
+// Allow experimental browser features to be run.
+// (We need this for the File Saver API to work...)
+app.commandLine.appendSwitch("enable-experimental-web-platform-features");
+
 // Exit cleanly on request from parent process in development mode.
 if (isDevelopment) {
   if (process.platform === 'win32') {

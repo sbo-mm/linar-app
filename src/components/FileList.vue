@@ -1,5 +1,5 @@
 <template>
-  
+	
 	<div class="box">
 		
 		<div class="header">
@@ -10,11 +10,11 @@
 
 		<div class="box-list">
 			<TransitionGroup name="list">
-	  		<div v-for="file in files" class="item" :key="file.key">
-		  		<input type="checkbox" class="file-check" name="listSelect" :id="file.key + uuid" :value="file" v-model="checkedFiles" @change="updateSelectAll">
-		  		<label :for="file.key + uuid">{{file.name}}</label>
-	  		</div>
-	  	</TransitionGroup>
+				<div v-for="file in files" class="item" :key="file.key">
+					<input type="checkbox" class="file-check" name="listSelect" :id="file.key + uuid" :value="file" v-model="checkedFiles" @change="updateSelectAll">
+					<label :for="file.key + uuid">{{file.name}}</label>
+				</div>
+			</TransitionGroup>
 		</div>
 
 		<div class="box-opts">
@@ -38,83 +38,76 @@
 let uuid = 0;
 
 export default {
-  name: 'FileList',
-  components: {
-  },
-  props: {
-  	title: String,
-  	files: Array,
-  	propagate: Boolean,
-  	reset: Boolean
-  },
-  data() {
-  	return {
-  		checkedFiles: [],
-  		selectAll: false,
-  		checkId: "check-all",
-  		removeId: "rm-selected"
-  	}
-  },
-  methods: {
-  	select() {
-  		this.checkedFiles = [];
-  		if (!this.selectAll) {
-  			for (let i in this.files) {
-  				this.checkedFiles.push(this.files[i]);
-  			}
-  		}
-  	},
-  	updateSelectAll() {
-  		this.selectAll = (this.files.length === this.checkedFiles.length);
-  	},
-  	remove() {
-  		this.$emit('onremove', this.checkedFiles);
-  		this.checkedFiles = [];
-  		this.selectAll = false;
-  	}
-  },
-  beforeCreate(){
-  	this.uuid = uuid.toString();
-  	uuid += 1;
-  },
-  created() {
-  	let vm = this;
-  	this.$watch('propagate', (predicate) => {
-  		if (predicate) {
+	name: 'FileList',
+	components: {
+	},
+	props: {
+		title: String,
+		files: Array,
+		propagate: Boolean,
+		reset: Boolean
+	},
+	data() {
+		return {
+			checkedFiles: [],
+			selectAll: false,
+			checkId: "check-all",
+			removeId: "rm-selected"
+		}
+	},
+	methods: {
+		select() {
+			this.checkedFiles = [];
+			if (!this.selectAll) {
+				for (let i in this.files) {
+					this.checkedFiles.push(this.files[i]);
+				}
+			}
+		},
+		updateSelectAll() {
+			this.selectAll = (this.files.length === this.checkedFiles.length);
+		},
+		remove() {
+			this.$emit('onremove', this.checkedFiles);
+			this.checkedFiles = [];
+			this.selectAll = false;
+		}
+	},
+	beforeCreate(){
+		this.uuid = uuid.toString();
+		uuid += 1;
+	},
+	created() {
+		let vm = this;
+		this.$watch('propagate', (predicate) => {
+			if (predicate) {
+				vm.$emit('on-propagate-selected', vm.checkedFiles);
+				vm.checkedFiles = [];
+				vm.selectAll = false;
+			}
+		});
 
-  			/* DANGER: POTENTIAL SOURCE OF BUGS */
-  			if (vm.checkedFiles.length === 0) {
-  				return;
-  			}
-  			/* -------------------------------- */
+		this.$watch('reset', (predicate) => {
+			if (predicate) {
+				vm.$emit('onreset', vm.files);
+				vm.checkedFiles = [];
+				vm.selectAll = false;
+			}
+		});
 
-	  		vm.$emit('on-propagate-selected', vm.checkedFiles);
-  			vm.checkedFiles = [];
-  			vm.selectAll = false;
-  		}
-  	});
-
-  	this.$watch('reset', (predicate) => {
-  		if (predicate) {
-  			vm.$emit('onreset', vm.files);
-  			vm.checkedFiles = [];
-  			vm.selectAll = false;
-  		}
-  	});
-
-  },
-  mounted() {
-  	this.checkId = this.checkId + this.uuid;
-  	this.removeId = this.removeId + this.uuid;
-  }
+	},
+	mounted() {
+		this.checkId = this.checkId + this.uuid;
+		this.removeId = this.removeId + this.uuid;
+	}
 }
 </script>
 
 <style scoped>
 
 *, *:before, *:after { 
-  -webkit-box-sizing: border-box; 
-  box-sizing: border-box; 
+	-webkit-box-sizing: border-box; 
+	box-sizing: border-box; 
 }
 
 .box {
@@ -148,29 +141,6 @@ export default {
 	align-items: center;
 	z-index: 1;
 }
-
-/*
-
-.h0 {
-	position: relative;
-	margin: 0;
-}
-
-
-.h0:before {
-	content: '';
-	display: block;
-	position: absolute;
-
-	top: 0;
-	left: 2px;
-	width: 5px;
-	height: 100%;
-
-	border-radius: 3px;
-	background-color: #435757;
-}
-*/
 
 .h1 {
 	font-weight: 700;
@@ -234,7 +204,7 @@ input[type="checkbox"].file-check + label:hover {
 }
 
 input[type="checkbox"].file-check:checked + label:before {
-  content: '\f058'; /* circle checkmark */
+	content: '\f058'; /* circle checkmark */
 }
 
 .box-opts {
@@ -301,16 +271,16 @@ input[type="button"]:active + label {
 .list-move,
 .list-enter-active,
 .list-leave-active {
-  transition: all 0.5s ease;
+	transition: all 0.5s ease;
 }
 .list-enter-from,
 .list-leave-to {
-  opacity: 0;
-  transform: translateX(30px);
+	opacity: 0;
+	transform: translateX(30px);
 }
 
 .list-leave-active {
-  position: absolute;
+	position: absolute;
 }
 
 </style>

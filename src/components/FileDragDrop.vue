@@ -67,6 +67,8 @@
 
 	import { buf2hex, str2hex } from '../assets/utils.js';
 
+	var CryptoJS = require("crypto-js");
+
 	export default {
 		name: "FileDragDrop",
 		components: {
@@ -243,16 +245,16 @@
 		},
 		created() {
 			let vm = this;
-	  	this.$watch('reset', (predicate) => {
-	  		if (predicate) {
+			this.$watch('reset', (predicate) => {
+				if (predicate) {
 
-	  			if (vm.droppedFiles) {
-	  				vm.onReset();
-	  			}
+					if (vm.droppedFiles) {
+						vm.onReset();
+					}
 
-		  		vm.$emit('onreset', vm.droppedFiles);
-	  		}
-	  	});
+					vm.$emit('onreset', vm.droppedFiles);
+				}
+			});
 		}
 	}
 </script>
