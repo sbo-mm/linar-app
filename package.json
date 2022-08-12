@@ -17,6 +17,7 @@
     "jszip": "^3.10.1",
     "sheetjs": "^2.0.0",
     "vue": "^3.2.13",
+    "vuex": "^4.0.2",
     "xlsx": "^0.18.5"
   },
   "devDependencies": {

@@ -140,7 +140,7 @@
 				this.droppedFiles = Array.from(e.dataTransfer.files);
 
 				if (!this.checkFilesForFormat(this.droppedFiles)) {
-					let errorMsg = "Unsuported file format(s)"
+					const errorMsg = "Unsuported file format(s)"
 					this.toggleIsError(true, errorMsg);
 					return false;
 				}
@@ -156,7 +156,7 @@
 				}
 
 				if (!this.checkFilesForFormat(this.droppedFiles)) {
-					let errorMsg = "Unsuported file format(s)"
+					const errorMsg = "Unsuported file format(s)"
 					this.toggleIsError(true, errorMsg);
 					return false;
 				}

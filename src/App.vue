@@ -1,9 +1,10 @@
 <template>
 	
-	<div class="main-container">
+	
+	<div class="app-scope"> <div class="main-container">
 		<div class="nav-grid">
 			<div class="header">
-				HEADER
+				<strong>LINAR</strong> <span>v {{version}}</span>
 			</div>
 			<div class="sidebar">
 				<div class="file-list-container">
@@ -39,7 +40,8 @@
 			</div>
 			<div class="footer">
 				<div class="main-btns">
-					<input type="button" id="proc-btn" value="Process Inbound" 
+					<!--
+					<input type="button" id="proc-btn" value="Process Inbound" :disabled="true"
 					@click="shouldPropagateInbound = true"
 					>
 					<input type="button" id="save-btn" value="Save Outbound"
@@ -48,10 +50,25 @@
 					<input type="button" id="undo-btn" value="Reset All" 
 					@click="resetAll"
 					>
+					-->
+					<button class="button" role="button" id="proc-btn"
+					:class="{'disabled' : currentFilesToProcess.length === 0}" 
+					@click="shouldPropagateInbound = true">
+						Process Inbound
+					</button>
+					<button class="button" role="button" id="save-btn"
+					:class="{'disabled' : recentProcessedFiles.length === 0}"  
+					@click="shouldPropagateOutbound = true">
+						Save Outbound
+					</button>
+					<button class="button" role="button" id="undo-btn" 
+					@click="resetAll">
+						Reset All
+					</button>
 				</div>
 			</div>  		
 		</div>
-	</div>
+	</div> </div>
 
 </template>
 
@@ -73,6 +90,10 @@ export default {
 	},
 	data() {
 		return {
+			version: "",
+			mainWidth: '',
+			mainHeight: '',
+
 			acceptedFiles: ".xlsx",
 			retrievedFileMap: {},
 			currentFilesToProcess: [],
@@ -82,6 +103,7 @@ export default {
 			shouldResetDragDrop: false,
 			shouldResetInbound: false,
 			shouldResetOutbound: false,
+
 			dropSpecialCharacters: false
 		}
 	},
@@ -95,7 +117,9 @@ export default {
 				// TODO: potential cleanup
 				//
 				console.log(err);
+				return false;
 			}
+			return true;
 		},
 		onFileLoaded(fobj) {
 			if (fobj.key in this.retrievedFileMap) {
@@ -163,7 +187,7 @@ export default {
 			});
 
 			// Generate output .zip file
-			const saveZip = await zip.generateAsync({type:"blob"});
+			const saveZip = await zip.generateAsync({ type: "blob" });
 
 			// Save the zipped object
 			const filp = await window.showSaveFilePicker({
@@ -261,15 +285,40 @@ export default {
 		}
 	},
 	mounted() {
+		// Extract the app version
+		this.version = process.env.PACKAGE_VERSION;
+
+		// Extract dimension sizes
+		const wDims = process.env.WINDOW_DIMS;
+		this.mainWidth = `${wDims.width}px`;
+		this.mainHeight = `${wDims.height}px`;
 	}  
 }
 </script>
 
 <style scoped>
 
+/*
+*		### COLORS ###
+*
+*		ONYX/TARMAC:     #191919
+*		SLATE:           #474747
+*		BRIGHT_REDDISH:  #FE5F55
+*   DARK_REDDIS:     #A64942
+*   BONE_WHITE:      #F9F6EE    
+*/
+
 * {
 	-webkit-box-sizing: border-box; 
 	box-sizing: border-box;
+}
+
+.app-scope {
+	width: v-bind(mainWidth);
+	height: v-bind(mainHeight);
+
+	padding: 30px;
+	background-color: #191919;
 }
 
 .main-container {
@@ -278,7 +327,8 @@ export default {
 	text-align: center;
 
 	width: 100%;
-	height: 500px;
+	height: 100%;
+	/*height: 500px;*/
 }
 
 .nav-grid {
@@ -290,25 +340,53 @@ export default {
 	grid-template-columns: 25% 75%;
 	grid-template-rows: 10% 80% 10%;
 
+	grid-row-gap: 7px;
+	grid-column-gap: 7px;
+
 	grid-template-areas:
 			"header header"
 			"sidebar article"
 			"footer footer" 
 }
 
-.header, .sidebar, .content, .footer {
+.header, .sidebar, .article, .footer {
 	width: 100%;
 	height: 100%;
+
+	border-radius: 5px;
+	overflow: hidden;
+
+	background-color: #FE5F55; /*#474747;*/
+	/*box-shadow: 1px 1px 3px black;*/
 }
 
 .header {
 	grid-area: header;
-	background-color: red;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: flex-end;
+
+	padding-right: 10px;
+	padding-left: 25px;
+
+	font-family: 'Courier New', monospace;
+}
+
+.header strong {
+	font-size: 3em;
+	letter-spacing: 25px;
+}
+
+.header span {
+	letter-spacing: -3px;
+	padding-bottom: 3px;
 }
 
 .sidebar {
 	grid-area: sidebar;
-	background-color: orange;
+
+	padding: 5px;
 
 	display: grid;
 	grid-template-columns: 100%;
@@ -317,12 +395,10 @@ export default {
 
 .article {
 	grid-area: article;
-	background-color: cyan;
 }
 
 .footer {
 	grid-area: footer;
-	background-color: purple;
 }
 
 .file-list-container {
@@ -332,16 +408,68 @@ export default {
 .main-btns {
 	display: grid;
 	grid-template-columns: 25% 25% 25% 25%;
+	justify-items: center;
 	align-items: center;
 
 	width: 100%;
 	height: 100%;
+	
+	/*
 	padding-right: 10px;
 	padding-left: 10px;
+	*/
 }
 
 .main-btns #undo-btn {
 	grid-column: 4;
 }
 
+.main-btns .button {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+ 
+	width: 80%;
+	padding: 6px 14px;
+	
+	font-weight: 400;
+
+	border-radius: 6px;
+	border: none;
+
+	color: #DFDEDF;
+	background: #191919;
+	
+	user-select: none;
+	-webkit-user-select: none;
+	
+	touch-action: manipulation;
+}
+
+.main-btns .button:hover {
+	background: #303030;
+}
+
+.main-btns .button:active {
+	background: #474747;
+}
+
+.main-btns .button.disabled {
+	pointer-events: none;
+	color: rgba(255, 255, 255, 0.4);
+	background: rgba(25, 25, 25, 0.4);
+}
+
+
 </style>
+
+<style>
+
+body {
+	margin: 0;
+}
+
+</style>
+
+
+
