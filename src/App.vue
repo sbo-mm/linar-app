@@ -1,6 +1,5 @@
 <template>
 	
-	
 	<div class="app-scope"> <div class="main-container">
 		<div class="nav-grid">
 			<div class="header">
@@ -40,19 +39,8 @@
 			</div>
 			<div class="footer">
 				<div class="main-btns">
-					<!--
-					<input type="button" id="proc-btn" value="Process Inbound" :disabled="true"
-					@click="shouldPropagateInbound = true"
-					>
-					<input type="button" id="save-btn" value="Save Outbound"
-					@click="shouldPropagateOutbound = true"
-					> 
-					<input type="button" id="undo-btn" value="Reset All" 
-					@click="resetAll"
-					>
-					-->
 					<button class="button" role="button" id="proc-btn"
-					:class="{'disabled' : currentFilesToProcess.length === 0}" 
+					:class="{'disabled' : currentFilesToProcess.length === 0 || shouldPropagateInbound}" 
 					@click="shouldPropagateInbound = true">
 						Process Inbound
 					</button>
@@ -304,7 +292,7 @@ export default {
 *		ONYX/TARMAC:     #191919
 *		SLATE:           #474747
 *		BRIGHT_REDDISH:  #FE5F55
-*   DARK_REDDIS:     #A64942
+*   DARK_REDDISH:    #A64942
 *   BONE_WHITE:      #F9F6EE    
 */
 

@@ -83,7 +83,7 @@ function prepareWorksheet(sheet, drop_special) {
 			character_map[character_name] = 0;
 		}
 
-		const script = row[HEADERS[SCRIPTIDX]].replace(/\s/g,'');
+		const script = row[HEADERS[SCRIPTIDX]];
 
 		if (drop_special) {
 			// TODO: RE to remove special chars
